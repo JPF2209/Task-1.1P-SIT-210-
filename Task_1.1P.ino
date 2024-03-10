@@ -11,8 +11,7 @@ int dotdelay = 200;
 bool pressed = true;
 
 //Condition set so that once I complete repeated button press
-//No matter how much the button has been pressed, it goes
-//Back to reset
+//No matter how much the button has been pressed, it goes back to reset
 bool back = false;
 
 //My name represented as a char array
@@ -33,8 +32,7 @@ void setup()
     attachInterrupt(0,interruptFunction, HIGH);
 }
 
-//Catches if I press the button during when the while
-//Loop occurs
+//Catches if I press the button during when the while the loop occurs
 void interruptFunction() 
 {
   bool c_state = digitalRead(button_status);
@@ -48,16 +46,16 @@ void interruptFunction()
 //main loop
 void loop()
 {
-  	//I want no interrupts because when I press the button
-  	//I want it to not return straight away to the loop
-  	//And I want it to execute the code
+  	//I want no interrupts because when I press the button, I want it to not 
+    //return straight away to the loop & I want it to execute the code
   	noInterrupts();
   	bool current_state = digitalRead(button_status);
+  	//Setting back, back to false
+  	back = false;
   	if (current_state == pressed)
     {
-      //Needed to seperate the process betweed
-      //Choosing the current state and looping through
-      //The letters of my name
+      //Needed to seperate the process between choosing the current state and 
+      //looping through the letters of my name
       logic();
       
     }
@@ -70,7 +68,8 @@ void logic()
   int i = 0;  
   delay(500);
   bool c_state = digitalRead(button_status);
-  while (i < 6 || c_state != true || back != true)
+  //And condition makes sure if one isn't there, the whole thing shuts down
+  while (i < 6 && c_state != true && back != true)
   {
     interrupts();
     //Using the char array to do sequence for each letter
@@ -78,12 +77,9 @@ void logic()
     delay(3000);
     i++;
   }
-  //Goes back to loop
-  loop();
 }
 
-//Here, while looping what to do for each char in an
-//array of characters
+//Here, while looping what to do for each char in an array of characters
 void morseCodeSequence(char* sequence)
 {
     int i = 0;
@@ -104,8 +100,7 @@ void outputSequence(char DoD)
 {
   	//Turn light on
     digitalWrite(light_pin, HIGH);
-  	//Change function depending of if - or . detected
-  	//Leaves light on for certain time period
+  	//Change function depending of if - or . detected, it leaves light on for certain time period
   	if (DoD == '.')
     {
         delay(dotdelay);
