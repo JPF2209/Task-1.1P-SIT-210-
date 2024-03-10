@@ -29,7 +29,7 @@ void setup()
 {
     pinMode(light_pin, OUTPUT);
   	pinMode(button_status, INPUT);
-    attachInterrupt(0,interruptFunction, HIGH);
+    attachInterrupt(0,interruptFunction, CHANGE);
 }
 
 //Catches if I press the button during when the while the loop occurs
@@ -38,7 +38,7 @@ void interruptFunction()
   bool c_state = digitalRead(button_status);
   if (c_state == true)
   {
-    loop();
+    logic();
     back = true;
   }
 }
@@ -67,14 +67,13 @@ void logic()
   noInterrupts();
   int i = 0;  
   delay(500);
-  bool c_state = digitalRead(button_status);
   //And condition makes sure if one isn't there, the whole thing shuts down
-  while (i < 6 && c_state != true && back != true)
+  while (i < 6 && back != true)
   {
     interrupts();
     //Using the char array to do sequence for each letter
     morseCodeSequence(name[i]);
-    delay(3000);
+    delay(500);
     i++;
   }
 }
@@ -84,7 +83,8 @@ void morseCodeSequence(char* sequence)
 {
     int i = 0;
 
-    while (sequence[i] != NULL)
+  	//For last method so that it doesn't do anything if back equals true
+    while (sequence[i] != NULL && back != true)
     {
   		bool c_state = digitalRead(button_status);
       	//Function to output light sequence for morse code
